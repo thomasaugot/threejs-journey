@@ -1,6 +1,12 @@
 # macOS
 .DS_Store
 
+# Large 3D/HDR assets
+*.hdr
+*.exr
+*.glb
+*.gltf
+
 # Dependencies
 node_modules/
 **/node_modules/
