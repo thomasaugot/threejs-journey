@@ -92,13 +92,22 @@ renderer.setClearColor(debugObject.clearColor);
 /**
  * Load model
  */
-const gltf = await gltfLoader.loadAsync("/model.glb");
+const gltf = await gltfLoader.loadAsync("/penis.glb");
 
 /**
  * Base Geometry
  */
 const baseGeometry = {};
-baseGeometry.instance = gltf.scene.children[0].geometry;
+let mesh;
+gltf.scene.traverse((child) => { if (child.isMesh) mesh = child; });
+baseGeometry.instance = mesh.geometry;
+baseGeometry.instance.center();
+baseGeometry.instance.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI));
+baseGeometry.instance.computeBoundingBox();
+const modelSize = new THREE.Vector3();
+baseGeometry.instance.boundingBox.getSize(modelSize);
+const normalizeScale = 3 / Math.max(modelSize.x, modelSize.y, modelSize.z);
+baseGeometry.instance.applyMatrix4(new THREE.Matrix4().makeScale(normalizeScale, normalizeScale, normalizeScale));
 baseGeometry.count = baseGeometry.instance.attributes.position.count;
 
 /**
@@ -194,10 +203,9 @@ particles.geometry.setAttribute(
   "aParticlesUv",
   new THREE.BufferAttribute(particlesUvArray, 2),
 );
-particles.geometry.setAttribute(
-  "aColor",
-  baseGeometry.instance.attributes.color,
-);
+if (baseGeometry.instance.attributes.color) {
+  particles.geometry.setAttribute("aColor", baseGeometry.instance.attributes.color);
+}
 particles.geometry.setAttribute(
   "aSize",
   new THREE.BufferAttribute(sizesArray, 1),
@@ -210,7 +218,7 @@ particles.material = new THREE.ShaderMaterial({
   transparent: true,
   depthWrite: false,
   uniforms: {
-    uSize: new THREE.Uniform(0.2),
+    uSize: new THREE.Uniform(0.07),
     uResolution: new THREE.Uniform(
       new THREE.Vector2(
         sizes.width * sizes.pixelRatio,
@@ -220,6 +228,7 @@ particles.material = new THREE.ShaderMaterial({
     uParticlesTexture: new THREE.Uniform(
       gpgpu.computation.getCurrentRenderTarget(gpgpu.particlesVariable).texture,
     ),
+    uColor: new THREE.Uniform(new THREE.Color(0.6, 0.6, 0.6)),
   },
 });
 
@@ -232,6 +241,11 @@ scene.add(particles.points);
  */
 gui.addColor(debugObject, "clearColor").onChange(() => {
   renderer.setClearColor(debugObject.clearColor);
+});
+
+debugObject.particleColor = "#999999";
+gui.addColor(debugObject, "particleColor").name("particleColor").onChange(() => {
+  particles.material.uniforms.uColor.value.set(debugObject.particleColor);
 });
 gui
   .add(particles.material.uniforms.uSize, "value")
