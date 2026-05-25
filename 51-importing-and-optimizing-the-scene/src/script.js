@@ -42,25 +42,32 @@ gltfLoader.setDRACOLoader(dracoLoader);
 /**
  * Textures
  */
-const bakedTexture = textureLoader.load("baked.jpg");
+const bakedTexture = textureLoader.load("scene_atlas.png");
 bakedTexture.flipY = false;
 bakedTexture.encoding = THREE.sRGBEncoding;
+
+const emitTexture = textureLoader.load("scene_emit.png");
+emitTexture.flipY = false;
+emitTexture.encoding = THREE.sRGBEncoding;
 
 /**
  * Model
  */
-gltfLoader.load("/portal.glb", (gltf) => {
+gltfLoader.load("/models/portal.glb", (gltf) => {
   gltf.scene.traverse((child) => {
-    child.material = bakedMaterial;
+    if (!child.isMesh) return;
+
+    const tex = textureLoader.load(
+      `textures/${child.name}_bake.png`,
+      undefined,
+      undefined,
+      () => console.warn(`No bake texture for mesh: ${child.name}`),
+    );
+    tex.flipY = false;
+    tex.encoding = THREE.sRGBEncoding;
+
+    child.material = new THREE.MeshBasicMaterial({ map: tex });
   });
-
-  const portalLightMesh = gltf.scene.getObjectByName("portalLight");
-  const poleLightAMesh = gltf.scene.getObjectByName("poleLightA");
-  const poleLightBMesh = gltf.scene.getObjectByName("poleLightB");
-
-  portalLightMesh.material = portalLightMaterial;
-  poleLightAMesh.material = lampMaterial;
-  poleLightBMesh.material = lampMaterial;
 
   scene.add(gltf.scene);
 });
@@ -71,11 +78,8 @@ gltfLoader.load("/portal.glb", (gltf) => {
 // Baked Materials
 const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture });
 
-// Portal Light
-const portalLightMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff });
-
-// Lamps
-const lampMaterial = new THREE.MeshBasicMaterial({ color: 0xffffe5 });
+// Emission (portal + lamps share the emit atlas)
+const emitMaterial = new THREE.MeshBasicMaterial({ map: emitTexture });
 
 /**
  * Sizes
