@@ -1,0 +1,24 @@
+html,
+body,
+#root
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ivory;
+}
+
+.label > div
+{
+    display: inline-block;
+    width: 100px;
+    padding: 4px;
+    border-radius: 12px;
+    height: fit-content;
+    background: rgba(0, 0, 0, 0.5);
+    margin: 10px;
+    color: #fff;
+    text-align: center;
+}
