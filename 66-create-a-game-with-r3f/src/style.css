@@ -1,0 +1,294 @@
+@font-face {
+  font-family: "Bebas Neue";
+  src: url("/bebas-neue-v9-latin-regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+html,
+body,
+#root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #0a0f1f;
+  overflow: hidden;
+}
+
+.interface {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  font-family: "Bebas Neue", cursive;
+  letter-spacing: 2px;
+}
+
+/* Level badge — top center */
+.level {
+  position: absolute;
+  top: 4%;
+  left: 0;
+  width: 100%;
+  color: #aacb7a;
+  font-size: 4.5vh;
+  text-align: center;
+  text-shadow: 0 0 6px rgba(151, 206, 76, 0.4);
+}
+
+/* Timer — large, glowing */
+.time {
+  position: absolute;
+  top: 11%;
+  left: 0;
+  width: 100%;
+  color: #ffffff;
+  font-size: 9vh;
+  text-align: center;
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.5);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Win banner */
+.restart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 36%;
+  left: 0;
+  width: 100%;
+  color: #97ce4c;
+  font-size: 9vh;
+  text-align: center;
+  text-shadow: 0 0 20px #97ce4c, 0 0 50px rgba(151, 206, 76, 0.8);
+  animation: pop 0.5s ease-out, glow 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 20px #97ce4c, 0 0 40px rgba(151, 206, 76, 0.6);
+  }
+  to {
+    text-shadow: 0 0 32px #97ce4c, 0 0 70px rgba(151, 206, 76, 0.95);
+  }
+}
+
+/* "Press any key" start prompt */
+.prompt {
+  position: absolute;
+  top: 55%;
+  left: 0;
+  width: 100%;
+  color: #ffffff;
+  font-size: 4vh;
+  text-align: center;
+  opacity: 0.85;
+  animation: blink 1.3s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/**
+ * Controls
+ */
+.controls {
+  position: absolute;
+  bottom: 8%;
+  left: 0;
+  width: 100%;
+  opacity: 0.85;
+}
+
+.controls .raw {
+  display: flex;
+  justify-content: center;
+}
+
+.controls .key {
+  width: 44px;
+  height: 44px;
+  margin: 5px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(4px);
+  transition: all 0.1s ease;
+}
+
+.controls .key.large {
+  width: 152px;
+}
+
+.controls .key.active {
+  background: #97ce4c;
+  border-color: #97ce4c;
+  box-shadow: 0 0 18px #97ce4c;
+  transform: translateY(2px);
+}
+
+/* Best time — under the timer */
+.best {
+  position: absolute;
+  top: 22%;
+  left: 0;
+  width: 100%;
+  color: #c9a14a;
+  font-size: 3vh;
+  text-align: center;
+  text-shadow: 0 0 6px rgba(201, 161, 74, 0.4);
+}
+
+/* Shared button */
+.play-btn {
+  pointer-events: auto;
+  cursor: pointer;
+  font-family: "Bebas Neue", cursive;
+  letter-spacing: 3px;
+  font-size: 4vh;
+  color: #0a0f1f;
+  background: #97ce4c;
+  border: none;
+  border-radius: 10px;
+  padding: 0.3em 1.4em;
+  margin-top: 0.6em;
+  box-shadow: 0 0 24px rgba(151, 206, 76, 0.6);
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+.play-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 36px rgba(151, 206, 76, 0.9);
+}
+
+/* Start menu */
+.menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.title {
+  color: #97ce4c;
+  font-size: 14vh;
+  margin: 0;
+  text-shadow: 0 0 24px rgba(151, 206, 76, 0.7);
+}
+.subtitle {
+  color: #cdd6c0;
+  font-size: 3vh;
+  margin: 0.2em 0 0.4em;
+  opacity: 0.85;
+}
+.legend {
+  margin-top: 1.4em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  color: #9aa890;
+  font-size: 2.4vh;
+}
+
+/* Pause overlay */
+.pause-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 15, 31, 0.6);
+  backdrop-filter: blur(3px);
+  pointer-events: auto;
+}
+.paused-title {
+  color: #97ce4c;
+  font-size: 9vh;
+  margin: 0;
+  text-shadow: 0 0 18px rgba(151, 206, 76, 0.7);
+}
+
+/* Difficulty selector */
+.difficulty {
+  display: flex;
+  gap: 0.6em;
+  margin-top: 0.4em;
+}
+.diff-btn {
+  pointer-events: auto;
+  cursor: pointer;
+  font-family: "Bebas Neue", cursive;
+  letter-spacing: 2px;
+  font-size: 2.4vh;
+  color: #cdd6c0;
+  background: rgba(151, 206, 76, 0.1);
+  border: 2px solid rgba(151, 206, 76, 0.4);
+  border-radius: 8px;
+  padding: 0.3em 1em;
+  transition: all 0.12s ease;
+}
+.diff-btn:hover {
+  border-color: rgba(151, 206, 76, 0.8);
+}
+.diff-btn.selected {
+  color: #0a0f1f;
+  background: #97ce4c;
+  border-color: #97ce4c;
+  box-shadow: 0 0 16px rgba(151, 206, 76, 0.6);
+}
+
+/* Best-times list on the menu */
+.records {
+  margin-top: 1.4em;
+  min-width: 320px;
+  color: #aacb7a;
+}
+.records-title {
+  font-size: 2.6vh;
+  text-align: center;
+  color: #c9a14a;
+  margin-bottom: 0.3em;
+  letter-spacing: 3px;
+}
+.record-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 2.2vh;
+  padding: 0.12em 0.4em;
+  opacity: 0.9;
+}
